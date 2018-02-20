@@ -7,11 +7,14 @@
   <form action="">
     <label>
       <strong>Inject Here:</strong>
-      <input type="text" name="injectme"/>
+      <input
+        type="text"
+        name="injectme"
+        value="<?= htmlspecialchars($_GET['injectme']) ?>"
+      />
       <button>Go!</button>
     </label>
   </form>
-
 
   <div id="injectable-app">
     <div>
