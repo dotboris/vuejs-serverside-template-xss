@@ -16,7 +16,7 @@
       <input
         type="text"
         name="injectme"
-        value="<?= htmlspecialchars($_GET['injectme']) ?>"
+        value="<?= htmlspecialchars((string) $_GET['injectme']) ?>"
       />
       <button>Go!</button>
     </label>
@@ -25,7 +25,7 @@
   <div id="injectable-app">
     <div v-pre>
       You have injected:
-      <?= htmlspecialchars($_GET['injectme']) ?>
+      <?= htmlspecialchars((string) $_GET['injectme']) ?>
     </div>
 
     <button type="button" @click="dec">-</button>

@@ -16,7 +16,7 @@
       <input
         type="text"
         name="injectme"
-        value="<?= htmlspecialchars($_GET['injectme']) ?>"
+        value="<?= htmlspecialchars((string) $_GET['injectme']) ?>"
       />
       <button>Go!</button>
     </label>
@@ -55,7 +55,7 @@
   <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
   <?php
   $serverVars = [
-    'injectMe' => $_GET['injectme']
+    'injectMe' => (string) $_GET['injectme']
   ];
   ?>
   <script>

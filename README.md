@@ -217,7 +217,7 @@ We can implement this like so:
 <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
 <?php
 $serverVars = [
-  'injectMe' => $_GET['injectme']
+  'injectMe' => (string) $_GET['injectme']
 ];
 ?>
 <script>
