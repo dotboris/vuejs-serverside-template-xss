@@ -247,4 +247,31 @@ vulnerable XSS.
 
 ## Is this specific to PHP?
 
+Not at all. This can work with any serverside language or technology. You can
+take this example and rewrite it in any serverside technology and it would still
+be vulnerable. It doesn't matter how much automatic escaping this technology
+does, because no one automatically escapes variables injected in Vue.js
+templates.
+
 ## What about other frameworks / libs?
+
+Any library or framework that lets you write templates in HTML is potentially
+vulnerable to this.
+
+Angular 1 apps are famously vulnerable to this. In their
+[security guide](https://docs.angularjs.org/guide/security#angularjs-templates-and-expressions)
+the angular team warn explicitly against this.
+
+> Generating AngularJS templates on the server containing user-provided content.
+> This is the most common pitfall where you are generating HTML via some
+> server-side engine such as PHP, Java or ASP.NET.
+
+They've also tried for a long time to build a sandbox that mitigates against XSS
+coming from the server. Every time that they've improved or fixed the sanbox, it
+was broken or bypassed. Eventually the angular team
+[got rid of the sandbox](https://docs.angularjs.org/guide/security#sandbox-removal).
+
+Frameworks like React and Angular 2+ are not vulnerable to this kind of attack
+because they don't let you write templates in HTML and they force the use of
+a compiler. This makes injecting user input from the server into clientside
+templates very unlikely.
