@@ -217,7 +217,7 @@ from the server to the client.
 
 We can implement this like so:
 
-```php
+```html
 <div id="injectable-app">
   <div>
     You have injected: {{ SERVER_VARS.injectMe }}
