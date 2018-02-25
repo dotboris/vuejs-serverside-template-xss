@@ -38,8 +38,10 @@ the server.
 
 We have an opportunity for XSS here. Let's try the usual bag of tricks.
 
-When we try `<script>alert('xss')</script>` we get `&lt;script&gt;alert('xss')&lt;/script&gt;`.
-Similarly, if we try `<img src="nope.jpg" onerror="alert('xss')"/>` we get `&lt;img src=&quot;nope.jpg&quot; onerror=&quot;alert('xss')&quot;/&gt;`.
+When we try `<script>alert('xss')</script>` we get
+`&lt;script&gt;alert('xss')&lt;/script&gt;`.
+Similarly, if we try `<img src="nope.jpg" onerror="alert('xss')"/>` we get
+`&lt;img src=&quot;nope.jpg&quot; onerror=&quot;alert('xss')&quot;/&gt;`.
 
 Looks like everything gets escaped properly. We can confirm this by looking at
 the source code of the page.
