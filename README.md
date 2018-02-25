@@ -1,6 +1,21 @@
 # Vue.js serverside template XSS example
 
-TODO: What is this?
+This repository demonstrates how web apps that use both serverside rendering
+and Vue.js can be vulnerable to XSS even if they take precautions.
+
+`index.php` is a vulnerable PHP script. `fix-v-pre.php` and
+`fix-servervars-global.php` are fixed versions of the vulnerable script.
+
+The rest of this README walks through how to exploit the vulnerability, fixes
+the vulnerability and then discusses the scope and impact of such a
+vulnerability.
+
+Note that this vulnerability is not specific to PHP nor is it specific to Vue.js.
+If you have an app that mixes serverside rendering with clientside rendering,
+you might be vulnerable.
+
+I suggest that you run the demo, try to exploit it and then try to fix it. It's
+a great learning experience.
 
 ## Running the demo
 
