@@ -30,7 +30,7 @@ Once you open the app, you see that you have two things to play with:
 When we play around with the textbox, see that whatever we put in there ends up
 as a query parameter. If we put `foobar` in the textbox, we end up with the
 following url: `http://localhost:8080/?injectme=foobar`. We can also see that
-the text `foobar` injected in the page.
+the text `foobar` is injected in the page.
 
 This injection looks to be done server side. We can confirm this by looking at
 the source of the page. We see that `foobar` was part of the response sent by
