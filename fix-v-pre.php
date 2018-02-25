@@ -23,8 +23,9 @@
   </form>
 
   <div id="injectable-app">
-    <div>
-      You have injected: {{ SERVER_VARS.injectMe }}
+    <div v-pre>
+      You have injected:
+      <?= htmlspecialchars($_GET['injectme']) ?>
     </div>
 
     <button type="button" @click="dec">-</button>
@@ -53,14 +54,5 @@
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
-  <?php
-  $serverVars = [
-    'injectMe' => $_GET['injectme']
-  ];
-  ?>
-  <script>
-  window.SERVER_VARS = <?= json_encode($serverVars) ?>;
-  Vue.prototype.SERVER_VARS = window.SERVER_VARS;
-  </script>
 </body>
 </html>

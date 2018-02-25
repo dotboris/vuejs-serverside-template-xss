@@ -4,6 +4,12 @@
   <title>VueJS serverside template xss</title>
 </head>
 <body>
+  <ul>
+    <li><a href="index.php">Broken version</a></li>
+    <li><a href="fix-v-pre.php">Fix with v-pre</a></li>
+    <li><a href="fix-servervars-global.php">Fix with global SERVER_VARS variable</a></li>
+  </ul>
+
   <form action="">
     <label>
       <strong>Inject Here:</strong>
