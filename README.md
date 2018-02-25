@@ -230,6 +230,21 @@ The full fix is available in `fix-servervars-global.php`.
 
 ## Is this a real threat?
 
+After reading this, you might wonder: Why would anyone in their right minds mix
+severside and clientside templating?
+
+I think that it's pretty reasonable for a developper to add Vue.js to their
+existing serverside rendering app and think that everything is going to be fine.
+Vue.js advertises itself as a "progressive frameworks". They expect you to do
+this. Also, the security risks are not immediately apparent. Getting to XSS was
+pretty roundabout in this simple example.
+
+If you do a little googling, you'll find a bunch of examples and tutorials on
+how to use Vue.js with other serverside rendering frameworks. While I don't have
+the numbers to back this, I think that there are plenty of apps out there that
+mix serverside rendering and clientside templating. All of those apps could be
+vulnerable XSS.
+
 ## Is this specific to PHP?
 
 ## What about other frameworks / libs?
