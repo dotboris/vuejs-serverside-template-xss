@@ -5,7 +5,6 @@ and Vue.js can be vulnerable to XSS even if they take precautions.
 
 `index.php` is a vulnerable PHP script. `fix-v-pre.php` and
 `fix-servervars-global.php` are fixed versions of the vulnerable script.
-
 The rest of this README walks through how to exploit the vulnerability, shows to
 to fix the vulnerability and then discusses the scope and impact of such a
 vulnerability.
@@ -114,13 +113,13 @@ TypeError: alert is not a function
 `alert` is not a function? What's going on here? Vue.js expressions are
 evaluated in the context of the `Vue` instance that they are rendered with.
 In other words, when we try to render `{{ foobar }}`, it looks for the `foobar`
-property in the template's data. When we did `{{ alert('xss') }}` it was the
-same thing as doing `templateData.alert('xss')`. We got the error because our
+property in the template data. When we wrote `{{ alert('xss') }}` it was the
+interpreted as `templateData.alert('xss')`. We got the error because our
 template data does not have a property named `alert`.
 
 You can think of this as being stuck inside a javascript jail or sandbox. It's
 important to note that Vue.js doesn't have a real sandbox. It doesn't actively
-try to prevent you from accessing stuff outside your template data. This is just
+try to prevent you from accessing stuff outside the template data. This is just
 a side effect of how it evaluates expressions.
 
 How do we get out of this "sandbox"? There are many ways. If you want to flex
@@ -211,10 +210,10 @@ to use the `v-pre` directive. If a single developer forgets to do this, you're
 screwed all over again.
 
 When it comes to security, I prefer systematic solutions. A better solution
-would be to define a global variable in the page will all serverside variables.
-This does not prevent a developer from mixing serverside and clientside
-rendering but it does give them a secure mechanism for passing values from the
-server to the client.
+would be to define a global variable in the page that holds all serverside
+variables. This does not prevent a developer from mixing serverside and
+clientside rendering but it does give them a secure mechanism for passing values
+from the server to the client.
 
 We can implement this like so:
 
