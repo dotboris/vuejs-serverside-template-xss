@@ -23,7 +23,7 @@
   </form>
 
   <div id="injectable-app">
-    <div>
+    <div v-pre>
       You have injected:
       <?= htmlspecialchars((string) $_GET['injectme']) ?>
     </div>
