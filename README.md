@@ -29,7 +29,7 @@ a great learning experience.
 1.  Open <http://localhost:8080> in your browser
 
 If you don't want to bother with `docker` you can throw the `index.php` file on
-a php capable server and host it there. Keep in mind that this file is
+a PHP capable server and host it there. Keep in mind that this file is
 vulnerable to XSS by design, you should run this on a local environment.
 
 ## Walkthrough
@@ -47,7 +47,7 @@ as a query parameter. If we put `foobar` in the textbox, we end up with the
 following url: `http://localhost:8080/?injectme=foobar`. We can also see that
 the text `foobar` is injected in the page.
 
-This injection looks to be done server side. We can confirm this by looking at
+This injection looks to be done serverside. We can confirm this by looking at
 the source of the page. We see that `foobar` was part of the response sent by
 the server.
 
@@ -213,7 +213,7 @@ to use the `v-pre` directive. If a single developer forgets to do this, you're
 screwed all over again.
 
 When it comes to security, I prefer systematic solutions. A better solution
-would be to define a global variable in the page will all server side variables.
+would be to define a global variable in the page will all serverside variables.
 This does not prevent a developer from mixing serverside and clientside
 templating but it does give them a secure mechanism for doing so.
 
