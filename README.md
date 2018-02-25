@@ -19,7 +19,7 @@ a great learning experience.
 
 ## Running the demo
 
-1.  Install [docker & docker-compsoe](https://docs.docker.com/install/)
+1.  Install [docker & docker-compose](https://docs.docker.com/install/)
 1.  Run the demo
 
     ```sh
@@ -71,7 +71,7 @@ applications.
 One way of using Vue.js is to write a template in the HTML of your page and then
 tell Vue.js to render it through javascript. This is a common thing to do when
 you have an application that uses serverside rendering and you want to add some
-dynamysm to it. This is exacly what's happening here.
+dynamism to it. This is exactly what's happening here.
 
 When we look at the template, we see that our injected value from before is
 rendered directly inside of the template.
@@ -123,17 +123,17 @@ template data does not have a property named `alert`.
 
 You can think of this as being stuck inside a javascript jail or sandbox. It's
 important to note that Vue.js doesn't have a real sandbox. It doesn't actively
-try to prevent you from acessing stuff outside your template data. This is just
+try to prevent you from accessing stuff outside your template data. This is just
 a side effect of how Vue.js evaluates expressions.
 
 How do we get out of this "sandbox"? There are many ways. If you want to flex
-your javascript mustles you can give it a shot. The solution I went with is:
+your javascript muscles you can give it a shot. The solution I went with is:
 
 ```
 {{ constructor.constructor("alert('xss')")() }}
 ```
 
-This looks obtuse but it's surprisinsly simple. We know that we're evaluated
+This looks obtuse but it's surprisingly simple. We know that we're evaluated
 against our template data. When we do `constructor`, it's the same
 as doing `templateData.constructor`. Our template data is an object. All objects
 in javascript have a constructor. So `constructor` gives us `Vue$3` (the Vue.js
@@ -154,7 +154,7 @@ anything the browser can. This is full blown XSS.
 
 ## Why does this work?
 
-This exploit is possible becuase we're mixing serverside templating and
+This exploit is possible becusae we're mixing serverside templating and
 clientside templating.
 
 In this case, we have our PHP app that takes user input (a query parameter) and
@@ -209,12 +209,12 @@ to
 ```
 
 While this solution does work, it's not great. It's easy for anyone to forget
-to use the `v-pre` directive. If a single developper forgets to do this, you're
+to use the `v-pre` directive. If a single developer forgets to do this, you're
 screwed all over again.
 
 When it comes to security, I prefer systematic solutions. A better solution
-would be to define a global variable in the page will all server side varaibles.
-This does not prevent a developper from mixing serverside and clientside
+would be to define a global variable in the page will all server side variables.
+This does not prevent a developer from mixing serverside and clientside
 templating but it does give them a secure mechanism for doing so.
 
 We can implement this like so:
@@ -248,7 +248,7 @@ The full fix is available in `fix-servervars-global.php`.
 After reading this, you might wonder: Why would anyone in their right minds mix
 severside and clientside templating?
 
-I think that it's pretty reasonable for a developper to add Vue.js to their
+I think that it's pretty reasonable for a developer to add Vue.js to their
 existing serverside rendering app and think that everything is going to be fine.
 Vue.js advertises itself as a "progressive frameworks". They expect you to do
 this. Also, the security risks are not immediately apparent. Getting to XSS was
@@ -282,8 +282,8 @@ the angular team warn explicitly against this.
 > server-side engine such as PHP, Java or ASP.NET.
 
 They've also tried for a long time to build a sandbox that mitigates against XSS
-coming from the server. Every time that they've improved or fixed the sanbox, it
-was broken or bypassed. Eventually the angular team
+coming from the server. Every time that they've improved or fixed the sandbox,
+it was broken or bypassed. Eventually the angular team
 [got rid of the sandbox](https://docs.angularjs.org/guide/security#sandbox-removal).
 
 Frameworks like React and Angular 2+ are not vulnerable to this kind of attack
