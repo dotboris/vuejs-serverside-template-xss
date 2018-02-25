@@ -6,8 +6,8 @@ and Vue.js can be vulnerable to XSS even if they take precautions.
 `index.php` is a vulnerable PHP script. `fix-v-pre.php` and
 `fix-servervars-global.php` are fixed versions of the vulnerable script.
 
-The rest of this README walks through how to exploit the vulnerability, fixes
-the vulnerability and then discusses the scope and impact of such a
+The rest of this README walks through how to exploit the vulnerability, shows to
+to fix the vulnerability and then discusses the scope and impact of such a
 vulnerability.
 
 Note that this vulnerability is not specific to PHP nor is it specific to Vue.js.
@@ -35,9 +35,9 @@ vulnerable to XSS by design, you should run this on a local environment.
 ## Walkthrough
 
 :rotating_light: Warning: spoilers ahead! If you want to exploit this
-yourself, stop reading. The following gives the solution. :rotating_light:
+yourself, stop reading. The following gives away the solution. :rotating_light:
 
-Once you open the app, you see that you have two things to play with:
+First we open the app and see that we have two things to play with:
 
 1.  a textbox that lets you inject text
 1.  a counter application
@@ -49,9 +49,8 @@ the text `foobar` is injected in the page.
 
 This injection looks to be done serverside. We can confirm this by looking at
 the source of the page. We see that `foobar` was part of the response sent by
-the server.
-
-We have an opportunity for XSS here. Let's try the usual bag of tricks.
+the server. We have an opportunity for XSS here. Let's try the usual bag of
+tricks.
 
 When we try `<script>alert('xss')</script>` we get
 `&lt;script&gt;alert('xss')&lt;/script&gt;`.
@@ -59,14 +58,12 @@ Similarly, if we try `<img src="nope.jpg" onerror="alert('xss')"/>` we get
 `&lt;img src=&quot;nope.jpg&quot; onerror=&quot;alert('xss')&quot;/&gt;`.
 
 Looks like everything gets escaped properly. We can confirm this by looking at
-the source code of the page.
+the source code of the page. Back to the drawing board. Let's try to understand
+how this app works. How does the counter app work? Maybe it can help us here.
 
-Back to the drawing board. Let's try to understand how this app works. How does
-the counter app work? Maybe it can help us here.
-
-The counter app is built with Vue.js. For those who are not familiar. Vue.js is
+The counter app is built with Vue.js. For those who are not familiar, Vue.js is
 a javascript lib that runs it the browser. It lets you build dynamic frontend
-applications.
+apps.
 
 One way of using Vue.js is to write a template in the HTML of your page and then
 tell Vue.js to render it through javascript. This is a common thing to do when
@@ -94,7 +91,7 @@ They're basically javascript. In Vue.js expressions have the form
 `{{ ... code goes here ... }}`.
 
 Let's give this a shot. We write `{{ 2 + 2 }}` in the textbox and we get
-`You have injected: 4`. It works!
+`You have injected: 4`. It works! :tada:
 
 For good measure we'll do an `alert` to prove that we have full control. We put
 `{{ alert('xss') }}` in the textbox and nothing. The whole counter is gone. When
@@ -124,7 +121,7 @@ template data does not have a property named `alert`.
 You can think of this as being stuck inside a javascript jail or sandbox. It's
 important to note that Vue.js doesn't have a real sandbox. It doesn't actively
 try to prevent you from accessing stuff outside your template data. This is just
-a side effect of how Vue.js evaluates expressions.
+a side effect of how it evaluates expressions.
 
 How do we get out of this "sandbox"? There are many ways. If you want to flex
 your javascript muscles you can give it a shot. The solution I went with is:
@@ -134,19 +131,20 @@ your javascript muscles you can give it a shot. The solution I went with is:
 ```
 
 This looks obtuse but it's surprisingly simple. We know that we're evaluated
-against our template data. When we do `constructor`, it's the same
-as doing `templateData.constructor`. Our template data is an object. All objects
-in javascript have a constructor. So `constructor` gives us `Vue$3` (the Vue.js
+against our template data. When we write `constructor`, it's interpreted as
+`templateData.constructor`. Our template data is an object. All objects in
+javascript have a constructor. So `constructor` gives us `Vue$3` (the Vue.js
 constructor).
 
 In javascript, all constructors are functions and all functions are objects.
 This means that `Vue$3` has a constructor. This constructor is the `Function`
+constructor. Writing `constructor.constructor` gives us the `Function`
 constructor.
 
-The `Function` constructor let's us define a function dynamically at runtime.
-We pass it the code of our function and it returns a function that we can run.
-In this case we we do `Function("alert('xss')")()`. We create a function that
-calls `alert` (the real `alert` in the global scope) and call it.
+The `Function` constructor let's us define a function dynamically at runtime. We
+pass it the code of our function and it returns a function that we can run. In
+this case we end up with `Function("alert('xss')")()`. This creates a function
+that calls `alert` (the real `alert` in the global scope) and then calls it.
 
 That's it. We've made it, we have injected javascript in a page we don't control
 and this javascript has access to the global scope. At this point we can do
@@ -154,8 +152,8 @@ anything the browser can. This is full blown XSS.
 
 ## Why does this work?
 
-This exploit is possible becusae we're mixing serverside templating and
-clientside templating.
+This exploit is possible because the app is mixing serverside rendering and
+clientside rendering.
 
 In this case, we have our PHP app that takes user input (a query parameter) and
 uses it to render an HTML page. The app escapes the input for HTML entities
@@ -215,7 +213,8 @@ screwed all over again.
 When it comes to security, I prefer systematic solutions. A better solution
 would be to define a global variable in the page will all serverside variables.
 This does not prevent a developer from mixing serverside and clientside
-templating but it does give them a secure mechanism for doing so.
+rendering but it does give them a secure mechanism for passing values from the
+server to the client.
 
 We can implement this like so:
 
@@ -246,19 +245,19 @@ The full fix is available in `fix-servervars-global.php`.
 ## Is this a real threat?
 
 After reading this, you might wonder: Why would anyone in their right minds mix
-severside and clientside templating?
+severside and clientside rendering?
 
 I think that it's pretty reasonable for a developer to add Vue.js to their
 existing serverside rendering app and think that everything is going to be fine.
 Vue.js advertises itself as a "progressive frameworks". They expect you to do
-this. Also, the security risks are not immediately apparent. Getting to XSS was
-pretty roundabout in this simple example.
+this. Also, the security risks are not immediately apparent. Getting our XSS to
+run was pretty roundabout.
 
 If you do a little googling, you'll find a bunch of examples and tutorials on
 how to use Vue.js with other serverside rendering frameworks. While I don't have
 the numbers to back this, I think that there are plenty of apps out there that
-mix serverside rendering and clientside templating. All of those apps could be
-vulnerable XSS.
+mix serverside rendering and clientside rendering. All of those apps could be
+vulnerable to this kind of XSS.
 
 ## Is this specific to PHP?
 
@@ -275,7 +274,7 @@ vulnerable to this.
 
 Angular 1 apps are famously vulnerable to this. In their
 [security guide](https://docs.angularjs.org/guide/security#angularjs-templates-and-expressions)
-the angular team warn explicitly against this.
+the angular team warns explicitly about this.
 
 > Generating AngularJS templates on the server containing user-provided content.
 > This is the most common pitfall where you are generating HTML via some
@@ -286,7 +285,8 @@ coming from the server. Every time that they've improved or fixed the sandbox,
 it was broken or bypassed. Eventually the angular team
 [got rid of the sandbox](https://docs.angularjs.org/guide/security#sandbox-removal).
 
-Frameworks like React and Angular 2+ are not vulnerable to this kind of attack
-because they don't let you write templates in HTML and they force the use of
-a compiler. This makes injecting user input from the server into clientside
-templates very unlikely.
+Frameworks like React and Angular 2+ are not likely to be vulnerable to this
+kind of attack because they don't let you write templates in HTML and they force
+the use of a compiler. This makes injecting user input from the server into
+clientside templates very unlikely. I'm not saying that React and Angualar 2+
+are bullet proof. You just have to try harder to be vulnerable.
