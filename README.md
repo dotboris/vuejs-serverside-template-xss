@@ -159,6 +159,75 @@ escape it. You don't have to remember to escape your data.
 
 ## How can I protect against this?
 
+The simple fix for this is to use the
+[`v-pre` directive](https://vuejs.org/v2/api/#v-pre) whenever you are injecting
+serverside values into a clientside template.
+
+In this case, you would change
+
+```html
+<div id="injectable-app">
+  <div>
+    You have injected:
+    <?= htmlspecialchars($_GET['injectme']) ?>
+  </div>
+
+  <button type="button" @click="dec">-</button>
+  {{counter}}
+  <button type="button" @click="inc">+</button>
+</div>
+```
+
+to
+
+```html
+<div id="injectable-app">
+  <div v-pre>
+    You have injected:
+    <?= htmlspecialchars($_GET['injectme']) ?>
+  </div>
+
+  <button type="button" @click="dec">-</button>
+  {{counter}}
+  <button type="button" @click="inc">+</button>
+</div>
+```
+
+While this solution does work, it's not great. It's easy for anyone to forget
+to use the `v-pre` directive. If a single developper forgets to do this, you're
+screwed all over again.
+
+When it comes to security, I prefer systematic solutions. A better solution
+would be to define a global variable in the page will all server side varaibles.
+This does not prevent a developper from mixing serverside and clientside
+templating but it does give them a secure mechanism for doing so.
+
+We can implement this like so:
+
+```html
+<div id="injectable-app">
+  <div>
+    You have injected: {{ SERVER_VARS.injectMe }}
+  </div>
+
+  <button type="button" @click="dec">-</button>
+  {{counter}}
+  <button type="button" @click="inc">+</button>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+<?php
+$serverVars = [
+  'injectMe' => $_GET['injectme']
+];
+?>
+<script>
+window.SERVER_VARS = <?= json_encode($serverVars) ?>;
+Vue.prototype.SERVER_VARS = window.SERVER_VARS;
+</script>
+```
+
+The full fix is available in `fix-servervars-global.php`.
+
 ## Is this a real threat?
 
 ## Is this specific to PHP?
