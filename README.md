@@ -139,6 +139,24 @@ anything the browser can. This is full blown XSS.
 
 ## Why does this work?
 
+This exploit is possible becuase we're mixing serverside templating and
+clientside templating.
+
+In this case, we have our PHP app that takes user input (a query parameter) and
+uses it to render an HTML page. The app escapes the input for HTML entities
+ensuring that simple XSS is impossible. When the page makes it into the browser,
+Vue.js takes part of this HTML and renders it like a template. We've seen that
+it's basically doing a complex `eval` on that HTML.
+
+In this context, Vue.js can't tell the difference between the user input which
+may not be safe and the template which is essentially code and is considered
+safe.
+
+When it's able to tell the difference between user input and template code,
+Vue.js does an amazing job at preventing XSS. In fact, it does a better job than
+PHP because it will treat it's template data as dangerous by default and always
+escape it. You don't have to remember to escape your data.
+
 ## How can I protect against this?
 
 ## Is this a real threat?
