@@ -5,7 +5,7 @@ and Vue.js can be vulnerable to XSS even if they take precautions.
 
 `index.php` is a vulnerable PHP script. `fix-v-pre.php` and
 `fix-servervars-global.php` are fixed versions of the vulnerable script.
-The rest of this README walks through how to exploit the vulnerability, shows to
+The rest of this README walks through how to exploit the vulnerability, shows how
 to fix the vulnerability and then discusses the scope and impact of such a
 vulnerability.
 
