@@ -234,7 +234,7 @@ $serverVars = [
 ];
 ?>
 <script>
-window.SERVER_VARS = <?= json_encode($serverVars) ?>;
+window.SERVER_VARS = JSON.parse(atob('<?= base64_encode(json_encode($serverVars)) ?>'));
 Vue.prototype.SERVER_VARS = window.SERVER_VARS;
 </script>
 ```
