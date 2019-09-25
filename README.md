@@ -192,17 +192,18 @@ In this case, you would change
 
 to
 
-```html
-<div id="injectable-app">
-  <div v-pre>
-    You have injected:
-    <?= htmlspecialchars($_GET['injectme']) ?>
-  </div>
+```diff
+ <div id="injectable-app">
+-  <div>
++  <div v-pre>
+     You have injected:
+     <?= htmlspecialchars($_GET['injectme']) ?>
+   </div>
 
-  <button type="button" @click="dec">-</button>
-  {{counter}}
-  <button type="button" @click="inc">+</button>
-</div>
+   <button type="button" @click="dec">-</button>
+   {{counter}}
+   <button type="button" @click="inc">+</button>
+ </div>
 ```
 
 While this solution does work, it's not great. It's easy for anyone to forget
